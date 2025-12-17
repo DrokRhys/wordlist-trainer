@@ -12,7 +12,7 @@ export interface Word {
 export interface TestResult {
     date: number;
     deviceId?: string; // Anonymous device identifier
-    type: 'cz-en-choice' | 'en-cz-choice' | 'cz-en-type' | 'en-cz-type';
+    type: 'cz-en-choice' | 'en-cz-choice' | 'cz-en-type' | 'en-cz-type' | 'marathon';
     score: number; // calculated score
     total: number;
     mistakes: string[]; // IDs of mistakes

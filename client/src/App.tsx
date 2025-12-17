@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Test from './pages/Test';
 import Learning from './pages/Learning';
 import History from './pages/History';
+import MarathonTest from './pages/MarathonTest';
 
 import Footer from './components/Footer';
 
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/marathon" element={<MarathonTest />} />
           <Route path="/learning" element={<Learning />} />
           <Route path="/history" element={<History />} />
         </Routes>

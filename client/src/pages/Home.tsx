@@ -12,13 +12,33 @@ export default function Home() {
     const [questionCount, setQuestionCount] = useState<number>(10);
     const [testType, setTestType] = useState<string>('cz-en-choice');
     const [prioritizeMistakes, setPrioritizeMistakes] = useState(false);
+    const [isMarathon, setIsMarathon] = useState(false);
+
+    useEffect(() => {
+        // Default batch size updates
+        if (isMarathon) setQuestionCount(20);
+        else setQuestionCount(10);
+    }, [isMarathon]);
 
     useEffect(() => {
         api.getStructure().then(setStructure).catch(console.error);
     }, []);
 
+    useEffect(() => {
+        if (isMarathon) {
+            setQuestionCount(20); // Set default batch size for marathon
+        } else {
+            setQuestionCount(10); // Reset to default for regular test
+        }
+    }, [isMarathon]);
+
     const startTest = () => {
-        navigate(`/test?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${testType}&prioritizeMistakes=${prioritizeMistakes}`);
+        if (isMarathon) {
+            const direction = testType.includes('en-cz') ? 'en-cz' : 'cz-en';
+            navigate(`/marathon?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${direction}&prioritizeMistakes=${prioritizeMistakes}`);
+        } else {
+            navigate(`/test?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${testType}&prioritizeMistakes=${prioritizeMistakes}`);
+        }
     };
 
     const startLearning = () => {
@@ -56,7 +76,7 @@ export default function Home() {
                         ))}
                     </select>
 
-                    <label><strong>Questions</strong></label>
+                    <label><strong>{isMarathon ? 'Batch Size' : 'Questions'}</strong></label>
                     <input
                         type="number"
                         value={questionCount}
@@ -64,6 +84,7 @@ export default function Home() {
                         min={5}
                         max={100}
                     />
+
                 </div>
 
                 <div className="card">
@@ -71,11 +92,22 @@ export default function Home() {
 
                     <label><strong>Test Type</strong></label>
                     <select value={testType} onChange={e => setTestType(e.target.value)}>
-                        <option value="cz-en-choice">CZ &rarr; EN (Choice)</option>
-                        <option value="en-cz-choice">EN &rarr; CZ (Choice)</option>
+                        {!isMarathon && <option value="cz-en-choice">CZ &rarr; EN (Choice)</option>}
+                        {!isMarathon && <option value="en-cz-choice">EN &rarr; CZ (Choice)</option>}
                         <option value="cz-en-type">CZ &rarr; EN (Type)</option>
                         <option value="en-cz-type">EN &rarr; CZ (Type)</option>
                     </select>
+
+                    <div style={{ marginBottom: '1rem', marginTop: '1rem', display: 'flex', alignItems: 'center' }}>
+                        <input
+                            type="checkbox"
+                            id="marathonMode"
+                            checked={isMarathon}
+                            onChange={e => setIsMarathon(e.target.checked)}
+                            style={{ width: 'auto', marginRight: '0.5rem', marginBottom: 0 }}
+                        />
+                        <label htmlFor="marathonMode"><strong>Marathon Mode</strong></label>
+                    </div>
 
                     <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
                         <input
