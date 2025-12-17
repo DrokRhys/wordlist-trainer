@@ -9,7 +9,8 @@ const PORT = process.env.PORT || 5010;
 app.use(cors());
 app.use(express.json());
 
-const DATA_DIR = path.join(__dirname, '../data');
+const isDist = __dirname.endsWith('dist');
+const DATA_DIR = path.join(__dirname, isDist ? '../../data' : '../data');
 const VOCAB_FILE = path.join(DATA_DIR, 'vocabulary.json');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
 
