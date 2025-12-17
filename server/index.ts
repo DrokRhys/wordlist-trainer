@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -12,6 +12,9 @@ app.use(express.json());
 const DATA_DIR = path.join(__dirname, '../data');
 const VOCAB_FILE = path.join(DATA_DIR, 'vocabulary.json');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
+
+// Serve static frontend
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Ensure data dir exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -72,6 +75,7 @@ function saveHistory(history: any[]) {
 
 // Get structure (units and sections)
 app.get('/api/structure', (req, res) => {
+    // ... (rest of getStructure content)
     const words = getWords();
     const structure: any = {};
 
@@ -95,6 +99,7 @@ app.get('/api/structure', (req, res) => {
 
 // Get words
 app.get('/api/words', (req, res) => {
+    // ... (rest of getWords content)
     const { unit, section, limit, random, prioritizeMistakes } = req.query;
     let words = getWords();
 
@@ -151,6 +156,7 @@ app.get('/api/words', (req, res) => {
 
 // Save test result
 app.post('/api/history', (req, res) => {
+    // ... (rest of saveHistory content)
     const entry = req.body;
     // Expected entry: { date: number, type: string, score: number, total: number, mistakes: Word[] }
 
@@ -168,6 +174,11 @@ app.post('/api/history', (req, res) => {
 // Get history
 app.get('/api/history', (req, res) => {
     res.json(getHistory());
+});
+
+// Fallback for React routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 app.listen(PORT, () => {
