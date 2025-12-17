@@ -84,6 +84,14 @@ Generate the SSL certificate using Certbot.
 certbot --nginx -d wordlist.magiostudios.com --non-interactive --agree-tos --email magiostudios.team@gmail.com
 ```
 
+### 6. Setup Cloudflare DNS
+Go to the Cloudflare Dashboard for `magiostudios.com` and add a new record:
+
+- **Type**: `A`
+- **Name**: `wordlist`
+- **IPv4 address**: `91.99.234.71`
+- **Proxy status**: `Proxied (Orange Cloud)`
+
 ## ✅ Verification
 - Visit: https://wordlist.magiostudios.com
 - Check logs: `pm2 logs wordlist-trainer-production`
