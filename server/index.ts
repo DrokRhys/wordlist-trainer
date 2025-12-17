@@ -13,8 +13,11 @@ const DATA_DIR = path.join(__dirname, '../data');
 const VOCAB_FILE = path.join(DATA_DIR, 'vocabulary.json');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
 
+// Define path to client build (relative to server/dist/index.js)
+const CLIENT_DIST = path.join(__dirname, '../../client/dist');
+
 // Serve static frontend
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(CLIENT_DIST));
 
 // Ensure data dir exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -178,7 +181,7 @@ app.get('/api/history', (req, res) => {
 
 // Fallback for React routing
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    res.sendFile(path.join(CLIENT_DIST, 'index.html'));
 });
 
 app.listen(PORT, () => {
