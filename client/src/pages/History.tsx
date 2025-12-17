@@ -33,6 +33,7 @@ export default function History() {
                             </div>
                             <div style={{ color: 'var(--text-muted)' }}>
                                 Type: {h.type} | Score: {h.score}/{h.total}
+                                {h.deviceId && <div style={{ fontSize: '0.85em', marginTop: '0.25rem', color: '#888' }}>User: {h.deviceId}</div>}
                             </div>
                         </div>
                     ))}
