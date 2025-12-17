@@ -71,7 +71,7 @@ npm run dev
 ```
 
 - **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:3000
+- **Backend**: http://localhost:5010
 
 ## 📝 Credits
 
