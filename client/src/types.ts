@@ -7,6 +7,7 @@ export interface Word {
     translation: string;
     unit: string;
     section: string;
+    lang?: string;
 }
 
 export interface TestResult {

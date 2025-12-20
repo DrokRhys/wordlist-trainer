@@ -49,40 +49,5 @@
     "mistakes": [],
     "deviceId": "GrumpyViking_o079",
     "date": 1765935980828
-  },
-  {
-    "id": "97kec9fpo",
-    "timestamp": "2025-12-20T16:31:49.660Z",
-    "type": "marathon",
-    "score": 1,
-    "total": 2,
-    "mistakes": [
-      "de123abc"
-    ],
-    "deviceId": "LazyUnicorn_528c",
-    "date": 1766248309629
-  },
-  {
-    "id": "pjjh4lz76",
-    "timestamp": "2025-12-20T16:43:56.085Z",
-    "type": "marathon",
-    "score": 7,
-    "total": 9,
-    "mistakes": [
-      "de456def",
-      "de012jkl"
-    ],
-    "deviceId": "SleepyRobot_btlm",
-    "date": 1766249036064
-  },
-  {
-    "id": "rk938qsfl",
-    "timestamp": "2025-12-20T16:52:09.246Z",
-    "type": "cz-en-choice",
-    "score": 7,
-    "total": 7,
-    "mistakes": [],
-    "deviceId": "RadioactiveCactus_vays",
-    "date": 1766249529227
   }
 ]

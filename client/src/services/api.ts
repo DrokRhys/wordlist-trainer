@@ -3,15 +3,19 @@ import type { VocabularyStructure, Word, TestResult } from '../types';
 
 import { getDeviceId } from '../utils/identity';
 
-// Use relative path in production (same origin), localhost in dev
-const API_URL = import.meta.env.PROD ? '/api' : 'http://localhost:5010/api';
+// Always use relative path, Vite proxy handles dev, Express handles prod
+const API_URL = '/api';
 
 export const api = {
-    getStructure: async () => {
-        const res = await axios.get<VocabularyStructure[]>(`${API_URL}/structure`);
+    getLanguages: async () => {
+        const res = await axios.get<string[]>(`${API_URL}/languages`);
         return res.data;
     },
-    getWords: async (params: { unit?: string, section?: string, limit?: number, random?: boolean, prioritizeMistakes?: boolean }) => {
+    getStructure: async (lang?: string) => {
+        const res = await axios.get<VocabularyStructure[]>(`${API_URL}/structure`, { params: { lang } });
+        return res.data;
+    },
+    getWords: async (params: { unit?: string, section?: string, limit?: number, random?: boolean, prioritizeMistakes?: boolean, lang?: string }) => {
         const res = await axios.get<Word[]>(`${API_URL}/words`, { params });
         return res.data;
     },

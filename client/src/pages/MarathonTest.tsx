@@ -11,6 +11,88 @@ interface Slot {
     attempts: number;
 }
 
+// Utility to normalize string for comparison
+function normalize(s: string) {
+    return s.toLowerCase()
+        .replace(/[\u00A0\u1680\u180E\u2000-\u200B\u202F\u205F\u3000\uFEFF]/g, ' ') // Standardize spaces
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/[.,!?;:]/g, ''); // Standardize punctuation
+}
+
+// Cleans text for display (removes pronunciation and meta-tags)
+function cleanForDisplay(text: string): string {
+    return text
+        .replace(/\/[^/]+\//g, '') // Remove pronunciation /.../
+        .replace(/\((v\.|n\.|adj\.|adv\.|prep\.|pron\.|phr\.|phr\s?v\.)\)/gi, '') // Remove common PoS tags
+        .replace(/,\s*p.p\./g, '') // Remove past participle marking
+        .replace(/\*/g, '') // Remove asterisks
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// Expands a "dirty" string into multiple possible valid answers
+function getSmartVariations(text: string): string[] {
+    // 1. Remove pronunciation and meta tags first
+    const clean = cleanForDisplay(text);
+
+    // 2. Handle slashes (vysoký /á /é OR word1 / word2)
+    // We split by slash and then handle suffixes vs full words
+    const parts = clean.split('/').map(p => p.trim());
+    const base = parts[0];
+    const results = new Set<string>();
+    results.add(base);
+
+    for (let i = 1; i < parts.length; i++) {
+        const part = parts[i];
+        if (part.startsWith('-') || (part.length <= 3 && !part.includes(' '))) {
+            // Likely a suffix (e.g., /á /é)
+            // Try to find a common stem or just append
+            // This is tricky, but let's try a simple heuristic: replace last N chars
+            const stem = base.substring(0, base.length - part.replace('-', '').length);
+            results.add(stem + part.replace('-', ''));
+            results.add(part); // Also add just in case
+        } else {
+            // Likely a full word variation
+            results.add(part);
+        }
+    }
+
+    // 3. Handle parentheses (pick (up))
+    const expanded = new Set<string>();
+    results.forEach(val => {
+        if (val.includes('(') && val.includes(')')) {
+            // Option 1: with parentheses content
+            expanded.add(val.replace(/\(|\)/g, '').replace(/\s+/g, ' ').trim());
+            // Option 2: without parentheses content
+            expanded.add(val.replace(/\([^)]+\)/g, '').replace(/\s+/g, ' ').trim());
+        } else {
+            expanded.add(val);
+        }
+    });
+
+    return Array.from(expanded).filter(v => v.length > 0);
+}
+
+// Levenshtein distance for typo detection
+function getLevenshteinDistance(a: string, b: string): number {
+    const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+    for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j - 1] + cost
+            );
+        }
+    }
+    return matrix[a.length][b.length];
+}
+
 export default function MarathonTest() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -36,6 +118,7 @@ export default function MarathonTest() {
     const [userInput, setUserInput] = useState('');
     const [showFeedback, setShowFeedback] = useState(false);
     const [lastResult, setLastResult] = useState<'correct' | 'wrong' | 'unknown' | null>(null);
+    const [isTypo, setIsTypo] = useState(false);
 
     // Stats
     const [totalAttempts, setTotalAttempts] = useState(0);
@@ -48,6 +131,7 @@ export default function MarathonTest() {
         const load = async () => {
             setLoading(true);
             try {
+                const lang = searchParams.get('lang') || undefined;
                 // Load ALL words to ensure we have a pool to draw from
                 // We rely on backend to shuffle and prioritize mistakes if requested
                 const data = await api.getWords({
@@ -55,16 +139,10 @@ export default function MarathonTest() {
                     section: section || undefined,
                     limit: 10000,
                     random: true,
-                    prioritizeMistakes
+                    prioritizeMistakes,
+                    lang
                 });
 
-                // If prioritizeMistakes is true, backend returns [Mistakes(shuffled), Others(shuffled)]
-                // If false, backend returns [All(shuffled)]
-                // So we can use data directly as available words queue.
-                const queue = [...data];
-
-                setAllWords(data);
-                setAvailableWords(queue);
 
                 // Initialize empty slots
                 const initialSlots: Slot[] = Array.from({ length: limit }, (_, i) => ({
@@ -73,14 +151,35 @@ export default function MarathonTest() {
                     status: 'empty',
                     attempts: 0
                 }));
-                setSlots(initialSlots);
-                slotsRef.current = initialSlots;
+
+                // Fill all initial slots with available words
+                const queue = [...data];
+                const updatedSlots = [...initialSlots];
+                for (let i = 0; i < updatedSlots.length; i++) {
+                    if (queue.length > 0) {
+                        const word = queue.shift()!;
+                        updatedSlots[i] = {
+                            ...updatedSlots[i],
+                            wordId: word.id,
+                            status: 'active'
+                        };
+                    }
+                }
+
+                setAllWords(data);
+                setAvailableWords(queue);
+                setSlots(updatedSlots);
+                slotsRef.current = updatedSlots;
 
                 // Start first turn
                 if (data.length > 0) {
-                    pickNext(initialSlots, queue, null);
+                    // Pick the first slot to start
+                    setCurrentSlotIndex(0);
+                    setShowFeedback(false);
+                    setLastResult(null);
+                    setUserInput('');
                 } else {
-                    setFinished(true);
+                    setLoading(false);
                 }
             } catch (e) {
                 console.error(e);
@@ -89,13 +188,12 @@ export default function MarathonTest() {
             }
         };
         load();
-    }, [unit, section, limit, prioritizeMistakes]);
+    }, [unit, section, limit, prioritizeMistakes, searchParams.get('lang')]); // Added lang dependency
 
     const pickNext = (currentSlots: Slot[], currentAvailable: Word[], prevSlotIdx: number | null) => {
-        // 1. Find next empty slot
+        // 1. If we have empty slots AND available words, fill ONE empty slot first
         const nextEmptyIndex = currentSlots.findIndex(s => s.status === 'empty');
 
-        // If we have an empty slot AND available words, assign new word
         if (nextEmptyIndex !== -1 && currentAvailable.length > 0) {
             // Pick next word
             const nextWord = currentAvailable[0];
@@ -123,19 +221,18 @@ export default function MarathonTest() {
             return;
         }
 
-        // 2. If no empty slots (or no words left), pick from existing slots based on priority
-        // Filter out completed slots (correct & attempts >= 3? OR just correct if we want to finish fast)
-        // User rule: "terminates when dots green".
+        // 2. Check termination condition: 
+        // All assigned slots are 'correct' AND no more words in queue
+        const allFilledDone = currentSlots.filter(s => s.wordId !== null).every(s => s.status === 'correct');
+        const noMoreWords = currentAvailable.length === 0;
 
-        // Check exact termination condition
-        const allDone = currentSlots.every(s => s.status === 'correct' || s.status === 'empty');
-        // Note: 'empty' should logically not exist here if we are in this branch, UNLESS pool ran out smaller than limit.
-        // If pool < limit, we might have empty slots at end that will never be filled. They should be ignored.
-
-        if (allDone) {
+        if (allFilledDone && noMoreWords) {
             finishTest();
             return;
         }
+        // Note: 'empty' should logically not exist here if we are in this branch, UNLESS pool ran out smaller than limit.
+        // If pool < limit, we might have empty slots at end that will never be filled. They should be ignored.
+
 
         // Weighted selection from assigned slots
         let candidates: { index: number, weight: number }[] = [];
@@ -217,21 +314,43 @@ export default function MarathonTest() {
         if (!slot.wordId) return;
 
         const wordObj = allWords.find(w => w.id === slot.wordId);
-        if (!wordObj) return; // Should not happen
+        if (!wordObj) return;
 
-        const correctAnswers = type === 'cz-en'
-            ? wordObj.word.split('/').map(s => s.trim().toLowerCase())
-            : wordObj.translation.split('/').map(s => s.trim().toLowerCase());
-
-        const userVal = userInput.trim().toLowerCase();
+        const rawText = type === 'cz-en' ? wordObj.word : wordObj.translation;
+        const normalizedAnswers = getSmartVariations(rawText).map(s => normalize(s));
+        const normalizedInput = normalize(userInput);
 
         let result: 'correct' | 'wrong' | 'unknown';
+        let foundTypo = false;
+
         if (skip) {
             result = 'unknown';
         } else {
-            result = correctAnswers.some(ans => ans === userVal) ? 'correct' : 'wrong';
+            // 1. Check exact (normalized) match
+            const exactMatch = normalizedAnswers.some(ans => ans === normalizedInput);
+
+            if (exactMatch) {
+                result = 'correct';
+            } else {
+                // 2. Check for typos (fuzzy match)
+                // Threshold: 1 char for len > 3, 2 chars for len > 8
+                const fuzzyMatch = normalizedAnswers.some(ans => {
+                    const dist = getLevenshteinDistance(ans, normalizedInput);
+                    const threshold = ans.length > 8 ? 2 : (ans.length > 3 ? 1 : 0);
+                    if (dist > 0 && dist <= threshold) return true;
+                    return false;
+                });
+
+                if (fuzzyMatch) {
+                    result = 'correct';
+                    foundTypo = true;
+                } else {
+                    result = 'wrong';
+                }
+            }
         }
 
+        setIsTypo(foundTypo);
         setLastResult(result);
         setTotalAttempts(p => p + 1);
 
@@ -326,9 +445,20 @@ export default function MarathonTest() {
     const currentWordObj = currentSlot?.wordId ? allWords.find(w => w.id === currentSlot.wordId) : null;
 
     // Safety check
-    if (!currentWordObj && !finished) return <div>Preparing next word...</div>;
+    if (!currentWordObj && !finished) {
+        if (allWords.length === 0) {
+            return (
+                <div className="fade-in card text-center">
+                    <h2>No words found</h2>
+                    <p className="mb-4">Try selecting a different unit or section.</p>
+                    <button className="btn btn-secondary" onClick={() => navigate('/')}>Back Home</button>
+                </div>
+            );
+        }
+        return <div className="p-8 text-center">Preparing next word...</div>;
+    }
 
-    const promptText = type === 'cz-en' ? currentWordObj!.translation : currentWordObj!.word;
+    const promptText = type === 'cz-en' ? cleanForDisplay(currentWordObj!.translation) : cleanForDisplay(currentWordObj!.word);
     const correctAnswerText = type === 'cz-en' ? currentWordObj!.word : currentWordObj!.translation;
 
 
@@ -343,7 +473,7 @@ export default function MarathonTest() {
 
             {/* Question Card */}
             <div className="card text-center mb-6" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <h3 className="text-muted mb-2">Translate to {type === 'cz-en' ? 'English' : 'Czech'}</h3>
+                <h3 className="text-muted mb-2">Translate to {type === 'cz-en' ? (searchParams.get('lang')?.toLowerCase().startsWith('de') ? 'German' : 'English') : 'Czech'}</h3>
                 <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>{promptText}</h1>
 
                 {!showFeedback ? (
@@ -377,14 +507,12 @@ export default function MarathonTest() {
                                 {lastResult === 'unknown' && <HelpCircle size={48} />}
 
                                 <h2 className="text-xl font-bold">
-                                    {lastResult === 'correct' ? 'Correct!' : (lastResult === 'unknown' ? 'Skipped' : 'Incorrect')}
+                                    {isTypo ? 'Correct (with typo)' : (lastResult === 'correct' ? 'Correct!' : (lastResult === 'unknown' ? 'Skipped' : 'Incorrect'))}
                                 </h2>
 
-                                {(lastResult !== 'correct') && (
-                                    <div className="text-lg mt-2">
-                                        Correct answer: <strong>{correctAnswerText}</strong>
-                                    </div>
-                                )}
+                                <div className="text-lg mt-2">
+                                    {lastResult === 'correct' && !isTypo ? 'Solution:' : 'Correct answer:'} <strong>{correctAnswerText}</strong>
+                                </div>
                             </div>
                         </div>
                         <button className="btn btn-primary w-full max-w-xs mx-auto flex items-center justify-center gap-2" onClick={handleNext}>

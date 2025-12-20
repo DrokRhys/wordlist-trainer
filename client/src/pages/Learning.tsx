@@ -13,6 +13,7 @@ export default function Learning() {
     useEffect(() => {
         const unit = searchParams.get('unit') || undefined;
         const section = searchParams.get('section') || undefined;
+        const lang = searchParams.get('lang') || undefined;
         const limit = Number(searchParams.get('limit')) || 10;
 
         // Always random for learning? Or sequential? 
@@ -20,7 +21,7 @@ export default function Learning() {
         // Let's keep it sequential unless user asked for Shuffle. 
         // User didn't specify, but "training" usually implies order or random.
         // Let's shuffle to make it interesting.
-        api.getWords({ unit, section, limit, random: true }).then(setWords).catch(console.error);
+        api.getWords({ unit, section, limit, random: true, lang }).then(setWords).catch(console.error);
     }, [searchParams]);
 
     if (words.length === 0) return <div className="container">Loading or no words found...</div>;

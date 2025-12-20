@@ -39,17 +39,18 @@ export default function Test() {
             const unit = searchParams.get('unit') || undefined;
             const section = searchParams.get('section') || undefined;
             const prioritizeMistakes = searchParams.get('prioritizeMistakes') === 'true';
+            const lang = searchParams.get('lang') || undefined;
 
             // Fetch target words
             // Note: api.getWords definition in client/services/api.ts needs Update to accept this param?
             // Actually getWords accepts `params` object which is passed to axios.
             // So I can just pass extra props if I cast it or update the type.
             // Let's update the type call.
-            const targets = await api.getWords({ unit, section, limit, random: true, prioritizeMistakes } as any);
+            const targets = await api.getWords({ unit, section, limit, random: true, prioritizeMistakes, lang } as any);
 
             // Fetch potential distractors (all words or a large random set)
             // Ideally we need distinct words.
-            const allWords = await api.getWords({ limit: 100, random: true }); // Get 100 random words for distractors
+            const allWords = await api.getWords({ limit: 100, random: true, lang }); // Get 100 random words for distractors
 
             // Generate Questions
             const qs = targets.map((w) => {
@@ -185,7 +186,7 @@ export default function Test() {
                         Finish & Save
                     </button>
                 </div>
-                <h3 style={{ color: 'var(--text-muted)' }}>Translate to {type.includes('cz-en') ? 'English' : 'Czech'}</h3>
+                <h3 style={{ color: 'var(--text-muted)' }}>Translate to {type.includes('cz-en') ? (searchParams.get('lang')?.toLowerCase().startsWith('de') ? 'German' : 'English') : 'Czech'}</h3>
                 <h1 style={{ fontSize: '2rem', textAlign: 'center', margin: '2rem 0' }}>{q.prompt}</h1>
 
                 <div style={{ width: '100%', maxWidth: '400px' }}>

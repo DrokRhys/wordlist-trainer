@@ -6,6 +6,8 @@ import { Book, GraduationCap, History as HistoryIcon } from 'lucide-react';
 
 export default function Home() {
     const navigate = useNavigate();
+    const [languages, setLanguages] = useState<string[]>([]);
+    const [selectedLang, setSelectedLang] = useState<string>('');
     const [structure, setStructure] = useState<VocabularyStructure[]>([]);
     const [selectedUnit, setSelectedUnit] = useState<string>('');
     const [selectedSection, setSelectedSection] = useState<string>('');
@@ -15,43 +17,64 @@ export default function Home() {
     const [isMarathon, setIsMarathon] = useState(false);
 
     useEffect(() => {
-        // Default batch size updates
-        if (isMarathon) setQuestionCount(20);
-        else setQuestionCount(10);
-    }, [isMarathon]);
-
-    useEffect(() => {
-        api.getStructure().then(setStructure).catch(console.error);
+        api.getLanguages().then(langs => {
+            setLanguages(langs);
+            if (langs.length > 0) {
+                // Try to find 'eng' or 'english' first, else take first
+                const defaultLang = langs.find(l => l.toLowerCase() === 'eng' || l.toLowerCase() === 'english') || langs[0];
+                setSelectedLang(defaultLang);
+            }
+        }).catch(console.error);
     }, []);
 
     useEffect(() => {
-        if (isMarathon) {
-            setQuestionCount(20); // Set default batch size for marathon
-        } else {
-            setQuestionCount(10); // Reset to default for regular test
+        if (selectedLang) {
+            api.getStructure(selectedLang).then(setStructure).catch(console.error);
+            setSelectedUnit('');
+            setSelectedSection('');
         }
-    }, [isMarathon]);
+    }, [selectedLang]);
+
 
     const startTest = () => {
+        const langQuery = selectedLang ? `&lang=${encodeURIComponent(selectedLang)}` : '';
         if (isMarathon) {
             const direction = testType.includes('en-cz') ? 'en-cz' : 'cz-en';
-            navigate(`/marathon?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${direction}&prioritizeMistakes=${prioritizeMistakes}`);
+            navigate(`/marathon?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${direction}&prioritizeMistakes=${prioritizeMistakes}${langQuery}`);
         } else {
-            navigate(`/test?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${testType}&prioritizeMistakes=${prioritizeMistakes}`);
+            navigate(`/test?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}&limit=${questionCount}&type=${testType}&prioritizeMistakes=${prioritizeMistakes}${langQuery}`);
         }
     };
 
     const startLearning = () => {
-        navigate(`/learning?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}`);
+        const langQuery = selectedLang ? `&lang=${encodeURIComponent(selectedLang)}` : '';
+        navigate(`/learning?unit=${encodeURIComponent(selectedUnit)}&section=${encodeURIComponent(selectedSection)}${langQuery}`);
     };
 
     const availableSections = selectedUnit ? structure.find(s => s.unit === selectedUnit)?.sections || [] : [];
+
+    const getLanguageDisplay = (lang: string) => {
+        const map: Record<string, string> = {
+            'eng': 'English',
+            'deutsch': 'Deutsch',
+            'cz': 'Čeština'
+        };
+        const normalized = lang.toLowerCase();
+        return map[normalized] || lang.charAt(0).toUpperCase() + lang.slice(1);
+    };
 
     return (
         <div className="fade-in">
             <div className="container">
                 <div className="card">
                     <h3>Select Content</h3>
+
+                    <label><strong>Language</strong></label>
+                    <select value={selectedLang} onChange={e => setSelectedLang(e.target.value)}>
+                        {languages.map(l => (
+                            <option key={l} value={l}>{getLanguageDisplay(l)}</option>
+                        ))}
+                    </select>
 
                     <label><strong>Unit</strong></label>
                     <select value={selectedUnit} onChange={e => {
@@ -84,30 +107,47 @@ export default function Home() {
                         min={5}
                         max={100}
                     />
-
                 </div>
-
                 <div className="card">
                     <h3>Select Mode</h3>
 
-                    <label><strong>Test Type</strong></label>
-                    <select value={testType} onChange={e => setTestType(e.target.value)}>
-                        {!isMarathon && <option value="cz-en-choice">CZ &rarr; EN (Choice)</option>}
-                        {!isMarathon && <option value="en-cz-choice">EN &rarr; CZ (Choice)</option>}
-                        <option value="cz-en-type">CZ &rarr; EN (Type)</option>
-                        <option value="en-cz-type">EN &rarr; CZ (Type)</option>
+                    <label><strong>Experience Mode</strong></label>
+                    <select
+                        value={isMarathon ? 'marathon' : 'normal'}
+                        onChange={e => setIsMarathon(e.target.value === 'marathon')}
+                        style={{ marginBottom: '0.5rem' }}
+                    >
+                        <option value="normal">Normal Mode</option>
+                        <option value="marathon">Marathon Mode</option>
                     </select>
 
-                    <div style={{ marginBottom: '1rem', marginTop: '1rem', display: 'flex', alignItems: 'center' }}>
-                        <input
-                            type="checkbox"
-                            id="marathonMode"
-                            checked={isMarathon}
-                            onChange={e => setIsMarathon(e.target.checked)}
-                            style={{ width: 'auto', marginRight: '0.5rem', marginBottom: 0 }}
-                        />
-                        <label htmlFor="marathonMode"><strong>Marathon Mode</strong></label>
+                    <div style={{
+                        fontSize: '0.85rem',
+                        color: 'var(--text-muted)',
+                        backgroundColor: 'rgba(0,0,0,0.03)',
+                        padding: '0.75rem',
+                        borderRadius: '6px',
+                        marginBottom: '1rem',
+                        borderLeft: '3px solid var(--primary)'
+                    }}>
+                        {isMarathon ? (
+                            <p style={{ margin: 0 }}>
+                                <strong>Marathon Mode:</strong> Type words until you get them all correct. Words you miss will keep reappearing until mastered. Features smart validation and typo tolerance.
+                            </p>
+                        ) : (
+                            <p style={{ margin: 0 }}>
+                                <strong>Normal Mode:</strong> Standard practice session. Supports multiple choice and translation. Best for initial learning and testing.
+                            </p>
+                        )}
                     </div>
+
+                    <label><strong>Test Type</strong></label>
+                    <select value={testType} onChange={e => setTestType(e.target.value)}>
+                        {!isMarathon && <option value="cz-en-choice">CZ &rarr; {selectedLang.toLowerCase().startsWith('de') ? 'DE' : 'EN'} (Choice)</option>}
+                        {!isMarathon && <option value="en-cz-choice">{selectedLang.toLowerCase().startsWith('de') ? 'DE' : 'EN'} &rarr; CZ (Choice)</option>}
+                        <option value="cz-en-type">CZ &rarr; {selectedLang.toLowerCase().startsWith('de') ? 'DE' : 'EN'} (Type)</option>
+                        <option value="en-cz-type">{selectedLang.toLowerCase().startsWith('de') ? 'DE' : 'EN'} &rarr; CZ (Type)</option>
+                    </select>
 
                     <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
                         <input
@@ -132,12 +172,12 @@ export default function Home() {
                         Learning Mode
                     </button>
                 </div>
-
-                <button className="btn btn-secondary" style={{ marginTop: '1rem', width: '100%' }} onClick={() => navigate('/history')}>
-                    <HistoryIcon size={20} style={{ verticalAlign: 'middle', marginRight: 8 }} />
-                    View History
-                </button>
             </div>
+
+            <button className="btn btn-secondary" style={{ marginTop: '1rem', width: '100%' }} onClick={() => navigate('/history')}>
+                <HistoryIcon size={20} style={{ verticalAlign: 'middle', marginRight: 8 }} />
+                View History
+            </button>
         </div>
     );
 }

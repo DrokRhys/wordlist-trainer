@@ -4,18 +4,19 @@ import fs from 'fs';
 import path from 'path';
 
 const app = express();
-const PORT = process.env.PORT || 5010;
+const isProd = process.env.NODE_ENV === 'production';
+const PORT = process.env.PORT || (isProd ? 5010 : 5011);
 
 app.use(cors());
 app.use(express.json());
 
-const isDist = __dirname.endsWith('dist');
-const DATA_DIR = path.join(__dirname, isDist ? '../../data' : '../data');
+// Define path to client build (handles both ts-node and dist/index.js)
+const isDist = path.basename(__dirname) === 'dist';
+const ROOT_DIR = path.resolve(__dirname, isDist ? '../../' : '../');
+const CLIENT_DIST = path.join(ROOT_DIR, 'client/dist');
+const DATA_DIR = path.join(ROOT_DIR, 'data');
 const VOCAB_FILE = path.join(DATA_DIR, 'vocabulary.json');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
-
-// Define path to client build (relative to server/dist/index.js)
-const CLIENT_DIST = path.join(__dirname, '../../client/dist');
 
 // Serve static frontend
 app.use(express.static(CLIENT_DIST));
@@ -77,10 +78,31 @@ function saveHistory(history: any[]) {
 
 // --- Endpoints ---
 
+// Get unique languages
+app.get('/api/languages', (req, res) => {
+    const words = getWords();
+    const languages = new Set<string>();
+    words.forEach((w: any) => {
+        if (w.lang) languages.add(w.lang);
+    });
+    // Default to eng if nothing else and eng is present
+    if (languages.size === 0) languages.add('eng');
+    res.json(Array.from(languages));
+});
+
 // Get structure (units and sections)
 app.get('/api/structure', (req, res) => {
-    // ... (rest of getStructure content)
-    const words = getWords();
+    const { lang } = req.query;
+    let words = getWords();
+
+    if (lang) {
+        words = words.filter((w: any) => w.lang === lang);
+    } else {
+        // Default to first found lang or 'eng' if not specified
+        const firstLang = words[0]?.lang || 'eng';
+        words = words.filter((w: any) => w.lang === firstLang);
+    }
+
     const structure: any = {};
 
     words.forEach((w: any) => {
@@ -103,9 +125,12 @@ app.get('/api/structure', (req, res) => {
 
 // Get words
 app.get('/api/words', (req, res) => {
-    // ... (rest of getWords content)
-    const { unit, section, limit, random, prioritizeMistakes } = req.query;
+    const { unit, section, limit, random, prioritizeMistakes, lang } = req.query;
     let words = getWords();
+
+    if (lang) {
+        words = words.filter((w: any) => w.lang === lang);
+    }
 
     if (unit) {
         words = words.filter((w: any) => w.unit === unit);
