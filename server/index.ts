@@ -10,9 +10,11 @@ const PORT = process.env.PORT || (isProd ? 5010 : 5011);
 app.use(cors());
 app.use(express.json());
 
-// Define path to client build (handles both ts-node and dist/index.js)
-const isDist = path.basename(__dirname) === 'dist';
-const ROOT_DIR = path.resolve(__dirname, isDist ? '../../' : '../');
+// Define path to root directory (handles both dev and prod/dist)
+const ROOT_DIR = fs.existsSync(path.join(__dirname, '../client'))
+    ? path.resolve(__dirname, '../')
+    : path.resolve(__dirname, '../../');
+
 const CLIENT_DIST = path.join(ROOT_DIR, 'client/dist');
 const DATA_DIR = path.join(ROOT_DIR, 'data');
 const VOCAB_FILE = path.join(DATA_DIR, 'vocabulary.json');
