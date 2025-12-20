@@ -207,7 +207,7 @@ export default function MarathonTest() {
         const wordsForOrder = allWordsRef.current;
         const nextUnseen = wordsForOrder.find(w => currentStates[w.id]?.status === 'empty');
         if (nextUnseen) {
-            selectWord(nextUnseen.id, currentStates, prevWordId);
+            selectWord(nextUnseen.id, currentStates);
             return;
         }
 
@@ -258,10 +258,10 @@ export default function MarathonTest() {
         }
 
         // Ensure the selected word has a slot assigned in left->right order
-        selectWord(selectedWordId, currentStates, prevWordId);
+        selectWord(selectedWordId, currentStates);
     };
 
-    const selectWord = (selectedWordId: string, currentStates: Record<string, WordProgress>, prevWordId: string | null) => {
+    const selectWord = (selectedWordId: string, currentStates: Record<string, WordProgress>) => {
         const statesAfterAssign = { ...currentStates };
         const selectedState = { ...statesAfterAssign[selectedWordId] };
         if (selectedState.slotIndex === null) {

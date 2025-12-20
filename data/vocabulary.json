@@ -2047,7 +2047,7 @@
   },
   {
     "id": "7e0f2h7km",
-    "word": "fight for phr",
+    "word": "fight for",
     "pos": "v",
     "pronunciation": "/faɪt fɔː/",
     "example": "All the students decided to fight for democracy.",
@@ -3136,7 +3136,7 @@
   },
   {
     "id": "vfvodfe9g",
-    "word": "take back phr",
+    "word": "take back",
     "pos": "v",
     "pronunciation": "/teɪk ˈbæk/",
     "example": "I wanted to take back the jumper, but I didn’t have the receipt.",
@@ -3158,7 +3158,7 @@
   },
   {
     "id": "5qh34jzjq",
-    "word": "try on phr",
+    "word": "try on",
     "pos": "v",
     "pronunciation": "/traɪ ˈɒn/",
     "example": "I’m going to the changing rooms to try on this shirt.",
@@ -3224,7 +3224,7 @@
   },
   {
     "id": "ytfzvvh9q",
-    "word": "carry on phr",
+    "word": "carry on",
     "pos": "v",
     "pronunciation": "/ˈkæri ɒn/",
     "example": "They carry on texting when I’m telling them something important.",
@@ -4588,7 +4588,7 @@
   },
   {
     "id": "bz3woenfw",
-    "word": "turn off phr",
+    "word": "turn off",
     "pos": "v",
     "pronunciation": "/tɜːn ˈɒf/",
     "example": "Turn off the light. I want to get some sleep.",
@@ -4599,7 +4599,7 @@
   },
   {
     "id": "5gsgw8v5a",
-    "word": "turn on phr",
+    "word": "turn on",
     "pos": "v",
     "pronunciation": "/tɜːn ˈɒn/",
     "example": "Can you turn on the TV? There’s something I want to watch.",
@@ -4823,7 +4823,7 @@
     "pos": "pl n",
     "pronunciation": "/ˈstreɪndʒəz/",
     "example": "Complete strangers come up to him in the street and say ‘Cheer up, mate!’ cizinci",
-    "translation": "",
+    "translation": "cizinci",
     "unit": "File 6",
     "section": "Useful words and phrases",
     "lang": "eng"
@@ -4878,7 +4878,7 @@
     "pos": "",
     "pronunciation": "/aɪ daʊt ɪt/",
     "example": "Is it open? ~ I doubt it. It’s very late. Pochybuji.",
-    "translation": "",
+    "translation": "pochybuji o tom",
     "unit": "File 6",
     "section": "",
     "lang": "eng"
@@ -4900,7 +4900,7 @@
     "pos": "",
     "pronunciation": "/ˈprɒbəbli (nɒt)/",
     "example": "I don’t think so. Probably not. Pravděpodobně (ne).",
-    "translation": "",
+    "translation": "pravděpodobně (ne)",
     "unit": "File 6",
     "section": "",
     "lang": "eng"
@@ -5699,7 +5699,7 @@
   },
   {
     "id": "9dxerimg6",
-    "word": "get up phr",
+    "word": "get up",
     "pos": "v",
     "pronunciation": "/ɡet ˈʌp/",
     "example": "What time do you get up in the morning?",
@@ -6209,7 +6209,7 @@
     "pos": "adv",
     "pronunciation": "/ˈmɑːstəfəli/",
     "example": "‘Vivienne,’ said Hartley, masterfully. ‘You must be mine.’ autoritativně",
-    "translation": "",
+    "translation": "mistrovsky",
     "unit": "File 8",
     "section": "Useful words and phrases",
     "lang": "eng"
@@ -6407,7 +6407,7 @@
     "pos": "n",
     "pronunciation": "/ɡraʊnd/",
     "example": "An earthquake is when the ground suddenly shakes very strongly. (povrch) země",
-    "translation": "",
+    "translation": "povrch země",
     "unit": "File 8",
     "section": "",
     "lang": "eng"
@@ -8042,7 +8042,7 @@
   },
   {
     "id": "17m9lca1m",
-    "word": "come back phr",
+    "word": "come back",
     "pos": "v",
     "pronunciation": "/kʌm ˈbæk/",
     "example": "He’s leaving, and he doesn’t know if he’ll come back.",
@@ -8064,7 +8064,7 @@
   },
   {
     "id": "j3gqz1dxd",
-    "word": "get off phr",
+    "word": "get off",
     "pos": "v",
     "pronunciation": "/ɡet ˈɒf/",
     "example": "Get off the bus at the railway station.",
@@ -8075,7 +8075,7 @@
   },
   {
     "id": "58ya1or14",
-    "word": "Go away! phr",
+    "word": "Go away!",
     "pos": "v",
     "pronunciation": "/ɡəʊ əˈweɪ/",
     "example": "Go away! I don’t want to speak to you.",
@@ -8086,7 +8086,7 @@
   },
   {
     "id": "yz7pp6s83",
-    "word": "go back phr",
+    "word": "go back",
     "pos": "v",
     "pronunciation": "/ɡəʊ ˈbæk/",
     "example": "I’m tired. Can we go back home now?",
@@ -8174,7 +8174,7 @@
   },
   {
     "id": "olw3jlr1z",
-    "word": "run away phr",
+    "word": "run away",
     "pos": "v",
     "pronunciation": "/rʌn əˈweɪ/",
     "example": "When she was a child, she once tried to run away from home.",
@@ -8185,7 +8185,7 @@
   },
   {
     "id": "44hesj3q0",
-    "word": "run off phr",
+    "word": "run off",
     "pos": "v",
     "pronunciation": "/rʌn ˈɒf/",
     "example": "The man tried to run off when he saw the policeman.",
@@ -8240,7 +8240,7 @@
   },
   {
     "id": "9ib35p8by",
-    "word": "be over phr",
+    "word": "be over",
     "pos": "v",
     "pronunciation": "/bi ˈəʊvə/",
     "example": "The match will be over at about 5.30 p.m.",
@@ -8251,7 +8251,7 @@
   },
   {
     "id": "pak5dhbgf",
-    "word": "call back phr",
+    "word": "call back",
     "pos": "v",
     "pronunciation": "/kɔːl ˈbæk/",
     "example": "He’s out. Could you call back later?",
@@ -8262,18 +8262,18 @@
   },
   {
     "id": "hd8etwyds",
-    "word": "come on phr",
+    "word": "come on",
     "pos": "v",
     "pronunciation": "/kʌm ˈɒn/",
     "example": "Come on! Let’s go. No  tak!   /   Honem!",
-    "translation": "",
+    "translation": "no tak / honem",
     "unit": "File 11",
     "section": "Vocabulary Banks",
     "lang": "eng"
   },
   {
     "id": "ichs4cdio",
-    "word": "fill in phr",
+    "word": "fill in",
     "pos": "v",
     "pronunciation": "/fɪl ˈɪn/",
     "example": "Could you fill in this form?",
@@ -8284,7 +8284,7 @@
   },
   {
     "id": "aitm9xkyw",
-    "word": "find out phr",
+    "word": "find out",
     "pos": "v",
     "pronunciation": "/faɪnd ˈaʊt/",
     "example": "I want to find out about hotels in Madrid.",
@@ -8295,7 +8295,7 @@
   },
   {
     "id": "9221ww5c7",
-    "word": "get on with phr",
+    "word": "get on with",
     "pos": "v",
     "pronunciation": "/ɡet ˈɒn wɪð/",
     "example": "I don’t get on with Anna. She’s really annoying.",
@@ -8306,7 +8306,7 @@
   },
   {
     "id": "phuo003a6",
-    "word": "get up phr",
+    "word": "get up",
     "pos": "v",
     "pronunciation": "/ɡet ˈʌp/",
     "example": "I get up at 10.00 a.m.",
@@ -8317,7 +8317,7 @@
   },
   {
     "id": "nikeij76r",
-    "word": "give back phr",
+    "word": "give back",
     "pos": "v",
     "pronunciation": "/ɡɪv ˈbæk/",
     "example": "When can you give back that book you borrowed?",
@@ -8328,7 +8328,7 @@
   },
   {
     "id": "skbuwovcz",
-    "word": "give up phr",
+    "word": "give up",
     "pos": "v",
     "pronunciation": "/ɡɪv ˈʌp/",
     "example": "I need to give up smoking.",
@@ -8339,7 +8339,7 @@
   },
   {
     "id": "879bgeipl",
-    "word": "go away phr",
+    "word": "go away",
     "pos": "v",
     "pronunciation": "/ɡəʊ əˈweɪ/",
     "example": "I want to go away for the weekend. I need a break.",
@@ -8350,7 +8350,7 @@
   },
   {
     "id": "jqsxwef6f",
-    "word": "go out phr",
+    "word": "go out",
     "pos": "v",
     "pronunciation": "/ɡəʊ ˈaʊt/",
     "example": "Let’s go out to a restaurant tonight.",
@@ -8361,7 +8361,7 @@
   },
   {
     "id": "94d467dxe",
-    "word": "look after phr",
+    "word": "look after",
     "pos": "v",
     "pronunciation": "/lʊk ˈɑːftə/",
     "example": "My sister said she would look after Jimmy for me today.",
@@ -8372,7 +8372,7 @@
   },
   {
     "id": "vbf8ef2jt",
-    "word": "look for phr",
+    "word": "look for",
     "pos": "v",
     "pronunciation": "/ˈlʊk fɔː/",
     "example": "Can you help me look for my key? I’ve lost it!",
@@ -8383,7 +8383,7 @@
   },
   {
     "id": "y37sjhum9",
-    "word": "look forward to phr",
+    "word": "look forward to",
     "pos": "v",
     "pronunciation": "/lʊk ˈfɔːwəd tə/",
     "example": "I look forward to seeing you soon.",
@@ -8394,7 +8394,7 @@
   },
   {
     "id": "cstmw42cx",
-    "word": "look up phr",
+    "word": "look up",
     "pos": "v",
     "pronunciation": "/ˈlʊk ʌp/",
     "example": "You should look up words you don’t know in the dictionary.",
@@ -8405,7 +8405,7 @@
   },
   {
     "id": "vd4vdqmw7",
-    "word": "pay back phr",
+    "word": "pay back",
     "pos": "v",
     "pronunciation": "/peɪ ˈbæk/",
     "example": "Did I pay back the money I borrowed from you?",
@@ -8416,7 +8416,7 @@
   },
   {
     "id": "tbfqff35e",
-    "word": "pick up phr",
+    "word": "pick up",
     "pos": "v",
     "pronunciation": "/pɪk ˈʌp/",
     "example": "Pick up these clothes from the floor.",
@@ -8427,7 +8427,7 @@
   },
   {
     "id": "9rnmomfa6",
-    "word": "put away phr",
+    "word": "put away",
     "pos": "v",
     "pronunciation": "/pʊt əˈweɪ/",
     "example": "Your room is a mess. Can you put away your clothes?",
@@ -8438,7 +8438,7 @@
   },
   {
     "id": "4sbofn2vc",
-    "word": "put on phr",
+    "word": "put on",
     "pos": "v",
     "pronunciation": "/pʊt ˈɒn/",
     "example": "It’s bedtime – go and put on your pyjamas.",
@@ -8449,7 +8449,7 @@
   },
   {
     "id": "r6gqdo0r5",
-    "word": "sit down phr",
+    "word": "sit down",
     "pos": "v",
     "pronunciation": "/sɪt ˈdaʊn/",
     "example": "Please, sit down and relax.",
@@ -8460,7 +8460,7 @@
   },
   {
     "id": "9e64u7xcq",
-    "word": "stand up phr",
+    "word": "stand up",
     "pos": "v",
     "pronunciation": "/stænd ˈʌp/",
     "example": "It’s polite to stand up when your manager comes in.",
@@ -8471,7 +8471,7 @@
   },
   {
     "id": "uphsswfln",
-    "word": "take back phr",
+    "word": "take back",
     "pos": "v",
     "pronunciation": "/teɪk ˈbæk/",
     "example": "I think I’ll take back these jeans I bought. They’re too small.",
@@ -8482,7 +8482,7 @@
   },
   {
     "id": "z3xazomux",
-    "word": "take off phr",
+    "word": "take off",
     "pos": "v",
     "pronunciation": "/teɪk ˈɒf/",
     "example": "Could you take off your boots, please?",
@@ -8493,7 +8493,7 @@
   },
   {
     "id": "yxtccsr5x",
-    "word": "throw away phr",
+    "word": "throw away",
     "pos": "v",
     "pronunciation": "/ˈθrəʊ əˈweɪ/",
     "example": "Don’t throw away that letter!",
@@ -8504,7 +8504,7 @@
   },
   {
     "id": "y8ifscryw",
-    "word": "try on phr",
+    "word": "try on",
     "pos": "v",
     "pronunciation": "/traɪ ˈɒn/",
     "example": "I’m going to try on these jeans.",
@@ -8515,7 +8515,7 @@
   },
   {
     "id": "uupkbhv3f",
-    "word": "turn down phr",
+    "word": "turn down",
     "pos": "v",
     "pronunciation": "/tɜːn ˈdaʊn/",
     "example": "Turn down the music! It’s very loud.",
@@ -8526,7 +8526,7 @@
   },
   {
     "id": "8siiio96j",
-    "word": "turn off phr",
+    "word": "turn off",
     "pos": "v",
     "pronunciation": "/tɜːn ˈɒf/",
     "example": "There’s nothing on. Shall I turn off the TV?",
@@ -8537,7 +8537,7 @@
   },
   {
     "id": "gqqr20ul0",
-    "word": "turn on phr",
+    "word": "turn on",
     "pos": "v",
     "pronunciation": "/tɜːn ˈɒn/",
     "example": "Could you turn on the TV? There’s a good movie on.",
@@ -8548,7 +8548,7 @@
   },
   {
     "id": "budxoo785",
-    "word": "turn up phr",
+    "word": "turn up",
     "pos": "v",
     "pronunciation": "/tɜːn ˈʌp/",
     "example": "Turn up the TV! I can’t hear.",
@@ -8559,7 +8559,7 @@
   },
   {
     "id": "hkg6cdvt4",
-    "word": "write down phr",
+    "word": "write down",
     "pos": "v",
     "pronunciation": "/raɪt ˈdaʊn/",
     "example": "Write down my address or you might forget it.",
@@ -9157,7 +9157,7 @@
     "pos": "v",
     "pronunciation": "/əˈrest/",
     "example": "He arrived at his local police station and said ‘Please arrest me again!’ zatknout",
-    "translation": "",
+    "translation": "zatknout",
     "unit": "File 12",
     "section": "Useful words and phrases",
     "lang": "eng"
@@ -9285,7 +9285,7 @@
   },
   {
     "id": "k9qd1udry",
-    "word": "pass on phr",
+    "word": "pass on",
     "pos": "v",
     "pronunciation": "/pɑːs ˈɒn/",
     "example": "Research has shown that people were happy to pass on good news about their friends.",
