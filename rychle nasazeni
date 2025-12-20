@@ -1,0 +1,11 @@
+cd /var/www/wordlist-trainer
+
+# 1. Zahodíme místní změny v historii, aby nás pustil git pull
+git checkout -- data/history.json
+
+# 2. Teď už git pull projde a stáhne moji opravu cest
+git pull
+
+# 3. Znovu build a restart (teď už s novým kódem)
+npm run build
+pm2 restart wordlist-trainer-production
